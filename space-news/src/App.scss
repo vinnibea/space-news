@@ -1,0 +1,51 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+body {
+  font-family: 'Montserrat', sans-serif;
+  background: #e5e5e5;
+}
+
+.App {
+
+  font-family: 'Montserrat', sans-serif;
+  min-height: 100vh;
+  &_results {
+    font-weight: 600;
+    font-size: 16px;
+    line-height: 20px;
+    
+    padding: 40px 0 5px;
+    margin-bottom: 45px;
+    border-bottom: 1px solid #EAEAEA;
+    color: #363636;
+  }
+}
+
+input {
+  box-sizing: border-box;
+  width: 600px;
+  height: 50px;
+  padding: 12px 60px;
+  background: #ffffff;
+  border: 1px solid #eaeaea;
+  box-shadow: 0px 8px 24px rgba(0, 0, 0, 0.05);
+  border-radius: 5px;
+  position: relative;
+
+  &:focus {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 150%;
+    color: #575757;
+    outline: none;
+  }
+}
+
+@media (max-width: 786px) {
+  input {
+    width: 100%;
+  }
+  
+}

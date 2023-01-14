@@ -76,7 +76,6 @@ export const Home: React.FC = () => {
 
   return (
     <>
-      {/* <Head></Head> */}
       <div style={{ position: "relative", fontFamily: "Montserrat" }}>
         <h3
           style={{

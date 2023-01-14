@@ -35,8 +35,8 @@ export const CardItem: React.FC<CardItemProps> = ({
   year,
 }) => {
   return (
-    <Grid item xs={12} md={4} key={summary}>
-      <Card className="card">
+    <Grid item xs={12} md={4} key={summary}  >
+      <Card className="card" >
         <img
           src={article.imageUrl}
           alt="img"

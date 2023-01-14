@@ -12,16 +12,23 @@ export const ArticlePage: React.FC = () => {
   const details = useAPI(location.pathname);
   console.log();
   return !details.id ? (
-    // <div
-    //   style={{
-    //     minHeight: "100vh",
-    //     zIndex: "99",
-    //   }}
-    
+    <div
+      style={{
+        minHeight: "100vh",
+        zIndex: "99",
+        margin: "-50px -75px",
+      }}
+    >
       <LinearProgress color="success" sx={{ zIndex: "100" }} />
-    // </div>
+    </div>
   ) : (
-    <div style={{ position: "relative", minHeight: "100vh" }}>
+    <div
+      style={{
+        position: "relative",
+        minHeight: "100vh",
+        margin: "-50px -75px",
+      }}
+    >
       <img
         src={details.imageUrl}
         alt={details.title}

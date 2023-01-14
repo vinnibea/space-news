@@ -8,9 +8,10 @@ body {
 }
 
 .App {
-
   font-family: 'Montserrat', sans-serif;
   min-height: 100vh;
+  padding: 50px 75px;
+ 
   &_results {
     font-weight: 600;
     font-size: 16px;
@@ -46,6 +47,10 @@ input {
 @media (max-width: 786px) {
   input {
     width: 100%;
+  }
+
+  .App {
+    padding: 10px;
   }
   
 }

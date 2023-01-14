@@ -54,6 +54,8 @@ const App: React.FC = () => {
   const articles = useAPI();
   const location = useLocation();
   console.log(location);
+
+  console.log(window.outerWidth)
   const store = {
     useAPI,
     articles,
@@ -62,7 +64,6 @@ const App: React.FC = () => {
     <MyContext.Provider value={store}>
       <div
         className="App"
-        style={{ padding: `${location.pathname == "/" ? "50px 75px" : '0 0 45px'}` }}
       >
         <Routes>
           <Route path="/" element={<Home />}></Route>

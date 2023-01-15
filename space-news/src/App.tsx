@@ -1,61 +1,14 @@
-import React, { createContext, Provider, useState, useEffect } from "react";
+import React from "react";
 import { Home } from "./Pages/Home";
-import { Routes, Route, useLocation, Link } from "react-router-dom";
-import "./App.scss";
+import { Routes, Route} from "react-router-dom";
 import { ArticlePage } from "./components/Article/Article";
+import { MyContext } from "./components/Context";
+import { useAPI } from "./hooks/useApi";
 
-interface Article {
-  summary: string;
-  publishedAt: string;
-  title: string;
-  imageUrl: string;
-  id: number;
-}
-
-const baseURL = "https://api.spaceflightnewsapi.net/v3/articles";
-
-const useAPI = (endPoint: string = ""): Article[] => {
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      const promise = await fetch(`${baseURL}${endPoint}`);
-      const data = await promise.json();
-      setTimeout(() => setData(data), 1500);
-    };
-
-    fetchData();
-  }, []);
-
-  return data;
-};
-
-interface Article {
-  summary: string;
-  publishedAt: string;
-  title: string;
-  imageUrl: string;
-  id: number;
-  timesSelectedTitle: number;
-  timesSelectedSummary: number;
-}
-
-interface ContextInterface {
-  articles: Article[];
-  useAPI: Function;
-}
-
-export const MyContext = createContext<ContextInterface>({
-  articles: [],
-  useAPI,
-});
-
+import "./App.scss";
 const App: React.FC = () => {
   const articles = useAPI();
-  const location = useLocation();
-  console.log(location);
 
-  console.log(window.outerWidth)
   const store = {
     useAPI,
     articles,

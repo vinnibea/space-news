@@ -1,93 +1,38 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
+import { MyContext } from "../components/Context";
 import { CardItem } from "../components/Card/Card";
-import { Skeleton, Card } from "@mui/material";
+import { Skeleton, Card, Typography, Box} from "@mui/material";
 import Grid from "@mui/material/Grid"; // Grid version 1
-import { MyContext } from "../App";
 import SearchIcon from "@mui/icons-material/Search";
+import {
+  queryFilterAndLight,
+  convertDate,
+  sliceTo,
+  prioritySort,
+  filters,
+} from "../__utils";
+import { styles } from "../styles-js/styles";
 
-interface Article {
-  summary: string;
-  publishedAt: string;
-  title: string;
-  imageUrl: string;
-  id: number;
-  timesSelectedTitle: number;
-  timesSelectedSummary: number;
-}
-
-const queryFilterAndLight = (article: Article, query: string): Article => {
-  let titleCount = 0;
-  let summaryCount = 0;
-  const articleArraySummary = article.summary
-    .slice(0, 97)
-    .split(" ")
-    .map((word) => {
-      const preparedWord = word.replace(/[.,]/gi, "").toLowerCase();
-      const preparedQuery: string[] = query.toLowerCase().split(" ");
-      const find = preparedQuery.find((query) => query === preparedWord);
-      if (find) {
-        summaryCount++;
-        return `<span style="background: yellow">${word}</span>`;
-      }
-
-      return word;
-    })
-    .join(" ");
-
-  const articleArrayTitle = article.title
-    .split(" ")
-    .map((word) => {
-      const preparedWord = word.replace(/[.,]/gi, "").toLowerCase();
-      const preparedQuery: string[] = query.toLowerCase().split(" ");
-      const find = preparedQuery.find((query) => query === preparedWord);
-      if (find) {
-        titleCount++;
-        return `<span style="background: yellow">${word}</span>`;
-      }
-
-      return word;
-    })
-    .join(" ");
-
-  const newArticle: Article = {
-    ...article,
-    summary: articleArraySummary,
-    title: articleArrayTitle,
-    timesSelectedTitle:
-      `<span style="background: yellow"></span>`.length * titleCount,
-    timesSelectedSummary:
-      `<span style="background: yellow"></span>`.length * summaryCount,
-  };
-
-  return newArticle;
-};
 export const Home: React.FC = () => {
   const { articles } = useContext(MyContext);
-
   const [text, getText] = useState("");
-  const filteredArticlesDescriptions = articles
-    .map((article) => queryFilterAndLight(article, text))
-    .filter((article) => {
-      if (text) {
-        return article.timesSelectedSummary || article.timesSelectedTitle;
-      }
-      return article;
-    });
+  let filteredArticles = articles.map((article) =>
+  queryFilterAndLight(
+    queryFilterAndLight(article, text, "summary"),
+    text,
+    "title"
+  )
+)
+.sort((a, b) => prioritySort(a, b))
+.filter((article) => filters(article, text));;
+
 
   return (
     <>
-      <div style={{ position: "relative", fontFamily: "Montserrat" }}>
-        <h3
-          style={{
-            fontWeight: "600",
-            fontSize: "16px",
-            lineHeight: "20px",
-            paddingBottom: "10px",
-            color: "#363636",
-          }}
-        >
+      <Box style={{ position: "relative", fontFamily: "Montserrat" }}>
+        <Typography variant="body1" component="div" sx={styles.home.header}>
           Filter by keywords
-        </h3>
+        </Typography>
         <input
           type="text"
           style={{ fontFamily: "Montserrat" }}
@@ -95,40 +40,24 @@ export const Home: React.FC = () => {
           value={text}
           placeholder="Search..."
         ></input>
-        <SearchIcon
-          sx={{
-            position: "absolute",
-            left: "20px",
-            top: "50%",
-            opacity: "0.3",
-            width: "30px",
-            height: "30px",
-          }}
-        ></SearchIcon>
-      </div>
-      <p className="App_results">
-        Results: {filteredArticlesDescriptions.length}{" "}
-      </p>
+        <SearchIcon sx={styles.home.searchIcon}></SearchIcon>
+      </Box>
+      <Typography className="App_results" variant="body1" component="div">
+        Results: {filteredArticles.length}{" "}
+      </Typography>
       <Grid container spacing={5} columns={12}>
-        {filteredArticlesDescriptions.length > 0
-          ? filteredArticlesDescriptions.map((article) => {
-              const sliceTo = 97 + article.timesSelectedSummary || 0;
-              const summaryPreview = article.summary.slice(0, sliceTo) + "...";
-              const dateToArray = article.publishedAt.split("T")[0].split("-");
-              const year = dateToArray[0];
+        {filteredArticles.length > 0
+          ? filteredArticles.map((article) => {
+              const summaryPreview = sliceTo(article);
+              const date = convertDate(article);
 
-              const month = Intl.DateTimeFormat("en", { month: "long" }).format(
-                new Date(dateToArray[1])
-              );
-
-              const day = dateToArray[2] + "th";
               return (
                 <CardItem
                   key={article.publishedAt}
                   article={article}
-                  day={day}
-                  month={month}
-                  year={year}
+                  day={date.day}
+                  month={date.month}
+                  year={date.year}
                   summary={summaryPreview}
                 />
               );
@@ -139,26 +68,14 @@ export const Home: React.FC = () => {
                   <Card
                     sx={{ backgroundColor: "transparent", boxShadow: "none" }}
                   >
-                    <Skeleton
-                      height={200}
-                      variant="rectangular"
-                      sx={{ marginBottom: "20px" }}
-                    />
-                    <Skeleton
-                      height={30}
-                      variant="rectangular"
-                      sx={{ marginBottom: "20px" }}
-                    />
-                    <Skeleton
-                      height={90}
-                      variant="rectangular"
-                      sx={{ marginBottom: "20px" }}
-                    />
-                    <Skeleton
-                      height={100}
-                      variant="rectangular"
-                      sx={{ marginBottom: "20px" }}
-                    />
+                    {[200, 30, 90, 100].map((val, index) => (
+                      <Skeleton
+                        key={val + index}
+                        height={val}
+                        variant="rectangular"
+                        sx={{ marginBottom: "20px" }}
+                      />
+                    ))}
                   </Card>
                 </Grid>
               );

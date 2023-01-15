@@ -4,7 +4,7 @@ Implemented:
 - Search input
 - filtering articles by keywords
 ---- priority of fields: (1) names; and (2) description
- - matched keywords should are highlighted with yellow color
+ - matched keywords are highlighted with yellow color
 
 Technologies used: 
 - React
